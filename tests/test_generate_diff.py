@@ -1,3 +1,4 @@
+import json
 import os
 import pytest
 from gendiff import generate_diff
@@ -23,13 +24,27 @@ def test_generate_diff_stylish(file1_name, file2_name):
 
     assert generate_diff(file1, file2, 'stylish') == expected
 
-@pytest.mark.parametrize("file1_name, file2_name", [
-    ("file1.json", "file2.json"),
-    ("file1.yml", "file2.yml"),
+
+@pytest.mark.parametrize('file1_name, file2_name', [
+    ('file1.json', 'file2.json'),
+    ('file1.yml', 'file2.yml'),
 ])
 def test_generate_diff_plain(file1_name, file2_name):
     file1 = get_fixture_path(file1_name)
     file2 = get_fixture_path(file2_name)
-    expected = read_file("result_plain.txt")
+    expected = read_file('result_plain.txt')
 
-    assert generate_diff(file1, file2, "plain") == expected
+    assert generate_diff(file1, file2, 'plain') == expected
+
+
+@pytest.mark.parametrize('file1_name, file2_name', [
+    ('file1.json', 'file2.json'),
+    ('file1.yml', 'file2.yml'),
+])
+def test_generate_diff_json(file1_name, file2_name):
+    file1 = get_fixture_path(file1_name)
+    file2 = get_fixture_path(file2_name)
+    result = generate_diff(file1, file2, 'json')
+
+    parsed = json.loads(result)
+    assert isinstance(parsed, list)
